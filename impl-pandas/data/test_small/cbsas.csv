@@ -1,0 +1,8 @@
+cbsa_id,name,state,tract_count,total_population,total_area_sqmi
+10000,"New York-Newark-Jersey City, NY-NJ-PA",01,7,42917,6.291102137973228
+10020,"Los Angeles-Long Beach-Anaheim, CA",02,7,52923,5.6545022856200156
+10040,"Chicago-Naperville-Elgin, IL-IN-WI",03,7,31683,8.227778407381292
+10060,"Dallas-Fort Worth-Arlington, TX",04,7,45626,5.242931528358287
+10080,"Houston-The Woodlands-Sugar Land, TX",05,7,41864,5.842034162151969
+10100,"Washington-Arlington-Alexandria, DC-VA-MD-WV",06,7,33341,7.519637226680496
+10120,"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",07,8,41905,12.90023063373618

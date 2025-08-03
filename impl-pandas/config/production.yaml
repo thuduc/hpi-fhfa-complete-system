@@ -1,0 +1,129 @@
+# HPI-FHFA Production Configuration
+
+# Application settings
+app:
+  name: "HPI-FHFA"
+  version: "1.0.0"
+  environment: "production"
+  debug: false
+  
+# API configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  timeout: 300
+  max_request_size: 104857600  # 100MB
+  cors:
+    enabled: true
+    origins: ["*"]
+    methods: ["GET", "POST", "PUT", "DELETE"]
+    
+# Data paths
+paths:
+  data: "/app/data"
+  logs: "/app/logs"
+  cache: "/app/cache"
+  results: "/app/results"
+  temp: "/tmp/hpi"
+
+# Database configuration
+database:
+  url: "${HPI_POSTGRES_URL}"
+  pool_size: 20
+  max_overflow: 10
+  pool_timeout: 30
+  echo: false
+
+# Redis configuration
+redis:
+  url: "${HPI_REDIS_URL}"
+  max_connections: 50
+  decode_responses: true
+  
+# Cache configuration
+cache:
+  backend: "redis"  # memory, disk, redis
+  ttl_hours: 24
+  max_size_gb: 10
+  eviction_policy: "lru"
+  
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "json"
+  handlers:
+    - type: "file"
+      filename: "/app/logs/hpi.log"
+      max_bytes: 104857600  # 100MB
+      backup_count: 10
+    - type: "console"
+      
+# Monitoring configuration
+monitoring:
+  enabled: true
+  metrics_port: 9000
+  health_check_interval: 30
+  alerts:
+    error_rate_threshold: 0.05
+    response_time_p95_threshold: 30.0
+    memory_usage_threshold: 0.9
+    
+# Batch processing configuration
+batch:
+  max_workers: 4
+  job_timeout: 3600
+  retry_attempts: 3
+  retry_delay: 60
+  priority_levels: ["low", "normal", "high", "critical"]
+  
+# HPI calculation settings
+hpi:
+  quality_filters:
+    min_days_between_sales: 180
+    max_price_ratio: 10.0
+    min_price_ratio: 0.1
+    outlier_std_threshold: 3.0
+    
+  regression:
+    method: "robust"  # standard, robust
+    max_iterations: 50
+    convergence_threshold: 0.0001
+    
+  aggregation:
+    min_pairs_per_tract: 10
+    supertract_threshold: 30
+    weight_normalization: true
+    
+  weighting_schemes:
+    - "sample"
+    - "value"
+    - "unit"
+    - "upb"
+    - "college"
+    - "non_white"
+    
+# Performance settings
+performance:
+  parallel_processing: true
+  chunk_size: 10000
+  memory_limit_gb: 8
+  cpu_limit: 4
+  
+# Security settings
+security:
+  api_key_header: "X-API-Key"
+  rate_limit:
+    enabled: true
+    requests_per_minute: 60
+    burst: 100
+  allowed_upload_extensions: [".csv", ".parquet", ".json"]
+  max_upload_size_mb: 500
+  
+# Feature flags
+features:
+  enable_outlier_detection: true
+  enable_robust_regression: true
+  enable_sensitivity_analysis: true
+  enable_synthetic_data: false
+  enable_api_versioning: true

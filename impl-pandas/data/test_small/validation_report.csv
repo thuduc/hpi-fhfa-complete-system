@@ -1,0 +1,2 @@
+total_transactions,valid_transactions,invalid_transactions,validation_rate,rejection_reasons,cagr_stats,time_diff_stats
+250,210,40,0.84,"{'Same 12-month period': 30, 'CAGR exceeds ±30%': 9, 'Appreciation out of bounds': 1}","{'mean': np.float64(0.04707129076486511), 'std': np.float64(0.062312074007483176), 'min': np.float64(-0.213995789475959), 'max': np.float64(0.2702230430261692)}","{'mean_years': np.float64(3.7589126821159673), 'median_years': np.float64(3.271731690622861), 'min_years': np.float64(0.9418206707734429), 'max_years': np.float64(9.867214236824093)}"

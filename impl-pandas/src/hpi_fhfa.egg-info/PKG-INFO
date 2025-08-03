@@ -1,0 +1,134 @@
+Metadata-Version: 2.4
+Name: hpi-fhfa
+Version: 0.1.0
+Summary: House Price Index calculation using FHFA methodology
+Home-page: https://github.com/yourusername/hpi-fhfa
+Author: HPI-FHFA Development Team
+Author-email: 
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=2.0.0
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: scipy>=1.10.0
+Requires-Dist: scikit-learn>=1.2.0
+Requires-Dist: geopandas>=0.13.0
+Requires-Dist: shapely>=2.0.0
+Requires-Dist: matplotlib>=3.7.0
+Requires-Dist: seaborn>=0.12.0
+Requires-Dist: plotly>=5.14.0
+Requires-Dist: fastapi>=0.95.0
+Requires-Dist: uvicorn>=0.21.0
+Requires-Dist: pydantic>=2.0.0
+Requires-Dist: pytest>=7.3.0
+Requires-Dist: pytest-cov>=4.0.0
+Requires-Dist: pytest-mock>=3.10.0
+Requires-Dist: black>=23.0.0
+Requires-Dist: flake8>=6.0.0
+Requires-Dist: mypy>=1.2.0
+Requires-Dist: isort>=5.12.0
+Requires-Dist: psutil>=5.9.0
+Requires-Dist: memory-profiler>=0.60.0
+Requires-Dist: sphinx>=6.0.0
+Requires-Dist: sphinx-rtd-theme>=1.2.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.3.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: flake8>=6.0.0; extra == "dev"
+Requires-Dist: mypy>=1.2.0; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: sphinx>=6.0.0; extra == "docs"
+Requires-Dist: sphinx-rtd-theme>=1.2.0; extra == "docs"
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# HPI-FHFA Implementation
+
+Implementation of the FHFA House Price Index methodology using Python and Pandas.
+
+## Overview
+
+This project implements a flexible method of house price index construction using repeat-sales aggregates, based on FHFA Working Paper 21-01. The system constructs granular tract-level indices that can be aggregated using various weighting schemes.
+
+## Installation
+
+```bash
+pip install -e .
+```
+
+## Quick Start
+
+```python
+from hpi_fhfa.data import SyntheticDataGenerator, GeographicDataGenerator
+from hpi_fhfa.models.validators import DataValidator
+
+# Generate synthetic data
+data_gen = SyntheticDataGenerator()
+transaction_data = data_gen.generate_complete_dataset(
+    start_year=1975,
+    end_year=2023,
+    num_cbsas=20,
+    num_tracts=1000,
+    num_properties=50000
+)
+
+# Generate geographic data
+geo_gen = GeographicDataGenerator()
+geo_data = geo_gen.generate_complete_geographic_data(num_tracts=1000)
+
+# Validate transaction pairs
+validator = DataValidator()
+validation_report = validator.generate_validation_report(transaction_data['pairs'])
+print(f"Valid pairs: {validation_report['validation_rate']:.1%}")
+```
+
+## Features
+
+- **Data Models**: Comprehensive data models for transactions, geography, and demographics
+- **Synthetic Data Generation**: Generate realistic housing transaction data from 1975 to present
+- **Geographic Data**: Create synthetic tract geometries and CBSA definitions
+- **Data Validation**: Quality control filters for transaction pairs
+- **Data Transformation**: Tools for preparing data for repeat-sales regression
+
+## Project Structure
+
+```
+impl-pandas/
+├── src/
+│   └── hpi_fhfa/
+│       ├── models/          # Data models
+│       ├── data/           # Data generation and loading
+│       ├── core/           # Core algorithms (Phase 3+)
+│       ├── weights/        # Weight calculations (Phase 3+)
+│       └── api/            # API endpoints (Phase 5+)
+├── tests/                  # Unit and integration tests
+├── data/                   # Data storage
+├── notebooks/             # Jupyter notebooks
+└── scripts/               # Utility scripts
+```
+
+## Testing
+
+```bash
+pytest tests/
+pytest --cov=hpi_fhfa tests/
+```
+
+## License
+
+MIT License

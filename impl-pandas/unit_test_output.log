@@ -1,0 +1,382 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.4, pytest-8.4.1, pluggy-1.6.0 -- /Users/duc/projects/claude/github/hpi-fhfa2/impl-pandas/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/duc/projects/claude/github/hpi-fhfa2/impl-pandas
+plugins: anyio-4.9.0, cov-6.2.1, mock-3.14.1
+collecting ... collected 228 items
+
+tests/unit/test_aggregator.py::TestGeographicAggregator::test_basic_aggregation PASSED [  0%]
+tests/unit/test_aggregator.py::TestGeographicAggregator::test_custom_aggregation_levels PASSED [  0%]
+tests/unit/test_aggregator.py::TestGeographicAggregator::test_regression_results_input PASSED [  1%]
+tests/unit/test_aggregator.py::TestGeographicAggregator::test_parallel_aggregation PASSED [  1%]
+tests/unit/test_aggregator.py::TestGeographicAggregator::test_coverage_stats PASSED [  2%]
+tests/unit/test_aggregator.py::TestGeographicAggregator::test_aggregation_tree PASSED [  2%]
+tests/unit/test_aggregator.py::TestGeographicAggregator::test_missing_weights_handling PASSED [  3%]
+tests/unit/test_aggregator.py::TestGeographicAggregator::test_empty_data_handling PASSED [  3%]
+tests/unit/test_aggregator.py::TestGeographicAggregator::test_mixed_dataframe_regression_input PASSED [  3%]
+tests/unit/test_api_models.py::TestAPIModels::test_index_request_creation PASSED [  4%]
+tests/unit/test_api_models.py::TestAPIModels::test_index_request_with_filters PASSED [  4%]
+tests/unit/test_api_models.py::TestAPIModels::test_index_response_success PASSED [  5%]
+tests/unit/test_api_models.py::TestAPIModels::test_index_response_error PASSED [  5%]
+tests/unit/test_api_models.py::TestAPIModels::test_data_upload_request PASSED [  6%]
+tests/unit/test_api_models.py::TestAPIModels::test_data_upload_response PASSED [  6%]
+tests/unit/test_api_models.py::TestAPIModels::test_quality_report_response PASSED [  7%]
+tests/unit/test_api_models.py::TestAPIModels::test_sensitivity_analysis_request PASSED [  7%]
+tests/unit/test_api_models.py::TestAPIModels::test_geography_level_enum PASSED [  7%]
+tests/unit/test_api_models.py::TestAPIModels::test_weighting_scheme_enum PASSED [  8%]
+tests/unit/test_api_models.py::TestAPIModels::test_output_format_enum PASSED [  8%]
+tests/unit/test_batch_processor.py::TestBatchQueue::test_queue_add_and_get PASSED [  9%]
+tests/unit/test_batch_processor.py::TestBatchQueue::test_queue_priority_ordering PASSED [  9%]
+tests/unit/test_batch_processor.py::TestBatchQueue::test_queue_timeout PASSED [ 10%]
+tests/unit/test_batch_processor.py::TestBatchQueue::test_queue_cancel_job PASSED [ 10%]
+tests/unit/test_batch_processor.py::TestBatchQueue::test_queue_stats PASSED [ 10%]
+tests/unit/test_batch_processor.py::TestBatchProcessor::test_batch_processor_initialization PASSED [ 11%]
+tests/unit/test_batch_processor.py::TestBatchProcessor::test_submit_and_process_job PASSED [ 11%]
+tests/unit/test_batch_processor.py::TestBatchProcessor::test_submit_batch_jobs PASSED [ 12%]
+tests/unit/test_batch_processor.py::TestBatchProcessor::test_job_retry_on_failure PASSED [ 12%]
+tests/unit/test_batch_processor.py::TestBatchProcessor::test_job_timeout FAILED [ 13%]
+tests/unit/test_batch_processor.py::TestBatchProcessor::test_get_job_result PASSED [ 13%]
+tests/unit/test_batch_processor.py::TestBatchProcessor::test_concurrent_job_processing FAILED [ 14%]
+tests/unit/test_cache.py::TestCacheKey::test_index_request_key PASSED    [ 14%]
+tests/unit/test_cache.py::TestCacheKey::test_index_request_key_with_filters PASSED [ 14%]
+tests/unit/test_cache.py::TestCacheKey::test_quality_report_key PASSED   [ 15%]
+tests/unit/test_cache.py::TestCacheKey::test_pipeline_result_key PASSED  [ 15%]
+tests/unit/test_cache.py::TestCacheEntry::test_cache_entry_creation PASSED [ 16%]
+tests/unit/test_cache.py::TestCacheEntry::test_cache_entry_expiration PASSED [ 16%]
+tests/unit/test_cache.py::TestMemoryCacheBackend::test_basic_get_set PASSED [ 17%]
+tests/unit/test_cache.py::TestMemoryCacheBackend::test_ttl_expiration PASSED [ 17%]
+tests/unit/test_cache.py::TestMemoryCacheBackend::test_cache_statistics PASSED [ 17%]
+tests/unit/test_cache.py::TestMemoryCacheBackend::test_lru_eviction PASSED [ 18%]
+tests/unit/test_cache.py::TestMemoryCacheBackend::test_lfu_eviction PASSED [ 18%]
+tests/unit/test_cache.py::TestMemoryCacheBackend::test_clear_cache PASSED [ 19%]
+tests/unit/test_cache.py::TestDiskCacheBackend::test_disk_cache_operations PASSED [ 19%]
+tests/unit/test_cache.py::TestDiskCacheBackend::test_disk_cache_persistence PASSED [ 20%]
+tests/unit/test_cache.py::TestDiskCacheBackend::test_disk_cache_ttl PASSED [ 20%]
+tests/unit/test_cache.py::TestDiskCacheBackend::test_disk_cache_size_limit PASSED [ 21%]
+tests/unit/test_cache.py::TestDiskCacheBackend::test_disk_cache_clear PASSED [ 21%]
+tests/unit/test_cache.py::TestResultCache::test_index_result_caching PASSED [ 21%]
+tests/unit/test_cache.py::TestResultCache::test_cache_miss PASSED        [ 22%]
+tests/unit/test_cache.py::TestResultCache::test_result_cache_with_filters PASSED [ 22%]
+tests/unit/test_cache.py::TestResultCache::test_cache_stats_access PASSED [ 23%]
+tests/unit/test_data_generators.py::TestSyntheticDataGenerator::test_generator_initialization PASSED [ 23%]
+tests/unit/test_data_generators.py::TestSyntheticDataGenerator::test_cbsa_assignments PASSED [ 24%]
+tests/unit/test_data_generators.py::TestSyntheticDataGenerator::test_property_base_data PASSED [ 24%]
+tests/unit/test_data_generators.py::TestSyntheticDataGenerator::test_market_indices PASSED [ 25%]
+tests/unit/test_data_generators.py::TestSyntheticDataGenerator::test_transaction_generation PASSED [ 25%]
+tests/unit/test_data_generators.py::TestSyntheticDataGenerator::test_create_repeat_sales_pairs PASSED [ 25%]
+tests/unit/test_data_generators.py::TestSyntheticDataGenerator::test_complete_dataset_generation PASSED [ 26%]
+tests/unit/test_data_generators.py::TestSyntheticDataGenerator::test_demographic_data_generation PASSED [ 26%]
+tests/unit/test_data_generators.py::TestGeographicDataGenerator::test_tract_geometry_generation PASSED [ 27%]
+tests/unit/test_data_generators.py::TestGeographicDataGenerator::test_cbsa_data_generation PASSED [ 27%]
+tests/unit/test_data_generators.py::TestGeographicDataGenerator::test_tract_adjacency PASSED [ 28%]
+tests/unit/test_data_generators.py::TestGeographicDataGenerator::test_complete_geographic_generation PASSED [ 28%]
+tests/unit/test_data_generators.py::TestGeographicDataGenerator::test_demographic_weights_generation PASSED [ 28%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_initialization PASSED [ 29%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_sample_weights PASSED [ 29%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_value_weights PASSED [ 30%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_unit_weights PASSED [ 30%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_upb_weights PASSED [ 31%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_college_weights PASSED [ 31%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_non_white_weights PASSED [ 32%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_national_weights PASSED [ 32%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_missing_data PASSED [ 32%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_add_demographic_data PASSED [ 33%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_available_periods PASSED [ 33%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_available_geographies PASSED [ 34%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_validate_weights PASSED [ 34%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_synthetic_data_generation PASSED [ 35%]
+tests/unit/test_demographic_calculator.py::TestDemographicWeightCalculator::test_demographic_data_class PASSED [ 35%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_basic_estimation FAILED [ 35%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_index_values_structure FAILED [ 36%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_coverage_statistics PASSED [ 36%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_date_range_filtering FAILED [ 37%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_weight_generation FAILED [ 37%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_national_aggregation FAILED [ 38%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_tract_level_estimation PASSED [ 38%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_regression_results_storage FAILED [ 39%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_supertract_tracking FAILED [ 39%]
+tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_empty_data_handling PASSED [ 39%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_basic_calculation PASSED [ 40%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_with_base_period PASSED [ 40%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_missing_tracts PASSED [ 41%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_from_regression_results PASSED [ 41%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_date_filtering PASSED [ 42%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_supertract_handling PASSED [ 42%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_weight_type_warning PASSED [ 42%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_empty_data PASSED [ 43%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_no_weights PASSED [ 43%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_chain_index PASSED [ 44%]
+tests/unit/test_laspeyres.py::TestLaspeyresIndex::test_weighted_aggregation_accuracy PASSED [ 44%]
+tests/unit/test_models.py::TestTransactionPair::test_transaction_pair_properties PASSED [ 45%]
+tests/unit/test_models.py::TestTransactionPair::test_transaction_validation_valid PASSED [ 45%]
+tests/unit/test_models.py::TestTransactionPair::test_transaction_validation_same_period PASSED [ 46%]
+tests/unit/test_models.py::TestTransactionPair::test_transaction_validation_high_cagr PASSED [ 46%]
+tests/unit/test_models.py::TestTransactionPair::test_transaction_validation_extreme_appreciation PASSED [ 46%]
+tests/unit/test_models.py::TestTransactionPair::test_create_pairs_dataframe PASSED [ 47%]
+tests/unit/test_models.py::TestGeographyModels::test_tract_distance PASSED [ 47%]
+tests/unit/test_models.py::TestGeographyModels::test_cbsa_properties PASSED [ 48%]
+tests/unit/test_models.py::TestGeographyModels::test_supertract_properties PASSED [ 48%]
+tests/unit/test_models.py::TestWeightModels::test_weight_types PASSED    [ 49%]
+tests/unit/test_models.py::TestWeightModels::test_demographic_data PASSED [ 49%]
+tests/unit/test_models.py::TestWeightModels::test_weight_set_normalization PASSED [ 50%]
+tests/unit/test_monitoring.py::TestMetricsCollector::test_record_counter_metric PASSED [ 50%]
+tests/unit/test_monitoring.py::TestMetricsCollector::test_record_gauge_metric PASSED [ 50%]
+tests/unit/test_monitoring.py::TestMetricsCollector::test_record_timer_metric PASSED [ 51%]
+tests/unit/test_monitoring.py::TestMetricsCollector::test_metric_retention PASSED [ 51%]
+tests/unit/test_monitoring.py::TestMetricsCollector::test_metric_labels PASSED [ 52%]
+tests/unit/test_monitoring.py::TestMetricsCollector::test_concurrent_metric_recording PASSED [ 52%]
+tests/unit/test_monitoring.py::TestAlertManager::test_raise_alert PASSED [ 53%]
+tests/unit/test_monitoring.py::TestAlertManager::test_resolve_alert PASSED [ 53%]
+tests/unit/test_monitoring.py::TestAlertManager::test_alert_filtering PASSED [ 53%]
+tests/unit/test_monitoring.py::TestAlertManager::test_alert_summary PASSED [ 54%]
+tests/unit/test_monitoring.py::TestAlertManager::test_alert_handlers PASSED [ 54%]
+tests/unit/test_monitoring.py::TestAlertManager::test_alert_max_retention PASSED [ 55%]
+tests/unit/test_monitoring.py::TestPipelineMonitor::test_monitor_initialization PASSED [ 55%]
+tests/unit/test_monitoring.py::TestPipelineMonitor::test_record_pipeline_execution PASSED [ 56%]
+tests/unit/test_monitoring.py::TestPipelineMonitor::test_record_api_request PASSED [ 56%]
+tests/unit/test_monitoring.py::TestPipelineMonitor::test_health_checks PASSED [ 57%]
+tests/unit/test_monitoring.py::TestPipelineMonitor::test_threshold_alerts PASSED [ 57%]
+tests/unit/test_monitoring.py::TestPipelineMonitor::test_monitor_lifecycle PASSED [ 57%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_normalize_weights PASSED [ 58%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_validate_valid_weight_set PASSED [ 58%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_validate_unnormalized PASSED [ 59%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_validate_negative_weights PASSED [ 59%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_validate_empty_weights PASSED [ 60%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_validate_dominant_weight PASSED [ 60%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_validate_consistency PASSED [ 60%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_validate_missing_tracts PASSED [ 61%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_validate_large_weight_changes PASSED [ 61%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_fill_missing_weights PASSED [ 62%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_fill_and_normalize PASSED [ 62%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_redistribute_missing_weights PASSED [ 63%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_redistribute_no_overlap PASSED [ 63%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_merge_weights_average PASSED [ 64%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_merge_weights_sum PASSED [ 64%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_merge_weights_first PASSED [ 64%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_calculate_coverage PASSED [ 65%]
+tests/unit/test_normalizer.py::TestWeightNormalizer::test_adjustment_report PASSED [ 65%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_basic_detection PASSED [ 66%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_cagr_outliers PASSED [ 66%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_time_gap_outliers PASSED [ 67%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_residual_outliers PASSED [ 67%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_multiple_outlier_reasons PASSED [ 67%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_outlier_scores PASSED [ 68%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_get_clean_data PASSED [ 68%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_flag_outliers PASSED [ 69%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_summarize_outliers PASSED [ 69%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_empty_data PASSED [ 70%]
+tests/unit/test_outlier_detection.py::TestOutlierDetector::test_threshold_customization PASSED [ 70%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_pipeline_step_creation PASSED [ 71%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_simple_pipeline_execution PASSED [ 71%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_pipeline_with_failure PASSED [ 71%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_pipeline_with_optional_step PASSED [ 72%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_pipeline_execution_order PASSED [ 72%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_pipeline_retry_mechanism PASSED [ 73%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_hpi_pipeline_initialization PASSED [ 73%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_pipeline_context_updates PASSED [ 74%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_step_result_metrics PASSED [ 74%]
+tests/unit/test_pipeline_orchestrator.py::TestPipelineOrchestrator::test_pipeline_result_serialization PASSED [ 75%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_basic_quality_analysis PASSED [ 75%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_summary_metrics PASSED [ 75%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_validation_analysis PASSED [ 76%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_temporal_coverage PASSED [ 76%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_geographic_coverage PASSED [ 77%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_price_distribution PASSED [ 77%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_quality_scores PASSED [ 78%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_recommendations_good_data PASSED [ 78%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_recommendations_poor_data PASSED [ 78%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_report_summary_creation PASSED [ 79%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_empty_data_handling PASSED [ 79%]
+tests/unit/test_quality_metrics.py::TestDataQualityAnalyzer::test_quality_thresholds PASSED [ 80%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_basic_regression PASSED [ 80%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_date_filtering PASSED [ 81%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_design_matrix_construction PASSED [ 81%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_index_calculation PASSED [ 82%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_returns_calculation PASSED [ 82%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_convergence_info PASSED [ 82%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_empty_data_handling PASSED [ 83%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_insufficient_data_handling PASSED [ 83%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_standard_errors_calculation PASSED [ 84%]
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_residuals_properties PASSED [ 84%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_basic_robust_regression PASSED [ 85%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_different_robust_methods PASSED [ 85%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_outlier_downweighting PASSED [ 85%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_outlier_removal_option PASSED [ 86%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_tuning_constant_effect PASSED [ 86%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_influence_statistics PASSED [ 87%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_compare_with_ols PASSED [ 87%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_convergence_failure_handling PASSED [ 88%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_robust_standard_errors PASSED [ 88%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_empty_data PASSED [ 89%]
+tests/unit/test_robust_regression.py::TestRobustRegression::test_weighted_r_squared PASSED [ 89%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_basic_sensitivity_analysis PASSED [ 89%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_default_scenarios PASSED [ 90%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_parallel_execution PASSED [ 90%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_scenario_execution PASSED [ 91%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_impact_metrics_calculation PASSED [ 91%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_parameter_importance_ranking PASSED [ 92%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_recommendations_generation PASSED [ 92%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_failed_scenario_handling PASSED [ 92%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_visualization_data_creation PASSED [ 93%]
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_sensitivity_report_creation PASSED [ 93%]
+tests/unit/test_supertract.py::TestSupertractConstructor::test_basic_construction FAILED [ 94%]
+tests/unit/test_supertract.py::TestSupertractConstructor::test_half_pairs_counting PASSED [ 94%]
+tests/unit/test_supertract.py::TestSupertractConstructor::test_insufficient_tract_aggregation PASSED [ 95%]
+tests/unit/test_supertract.py::TestSupertractConstructor::test_adjacency_graph_construction PASSED [ 95%]
+tests/unit/test_supertract.py::TestSupertractConstructor::test_year_filtering PASSED [ 96%]
+tests/unit/test_supertract.py::TestSupertractConstructor::test_supertract_validation PASSED [ 96%]
+tests/unit/test_supertract.py::TestSupertractConstructor::test_tract_mapping PASSED [ 96%]
+tests/unit/test_supertract.py::TestSupertractConstructor::test_geometric_adjacency_computation PASSED [ 97%]
+tests/unit/test_validators.py::TestDataValidator::test_validate_transaction_batch PASSED [ 97%]
+tests/unit/test_validators.py::TestDataValidator::test_validate_extreme_cases PASSED [ 98%]
+tests/unit/test_validators.py::TestDataValidator::test_validate_tract_data PASSED [ 98%]
+tests/unit/test_validators.py::TestDataValidator::test_validate_supertract PASSED [ 99%]
+tests/unit/test_validators.py::TestDataValidator::test_validate_weights PASSED [ 99%]
+tests/unit/test_validators.py::TestDataValidator::test_generate_validation_report PASSED [100%]
+
+=================================== FAILURES ===================================
+_____________________ TestBatchProcessor.test_job_timeout ______________________
+tests/unit/test_batch_processor.py:328: in test_job_timeout
+    assert status.status in [BatchJobStatus.FAILED, BatchJobStatus.RUNNING]
+E   AssertionError: assert <BatchJobStatus.COMPLETED: 'completed'> in [<BatchJobStatus.FAILED: 'failed'>, <BatchJobStatus.RUNNING: 'running'>]
+E    +  where <BatchJobStatus.COMPLETED: 'completed'> = BatchJob(job_id='timeout_job', name='Timeout Test', pipeline='slow_test', context={'slow_output': {'result': 'should not complete'}}, priority=<JobPriority.NORMAL: 1>, created_at=datetime.datetime(2025, 8, 3, 10, 16, 58, 569169), scheduled_at=None, started_at=datetime.datetime(2025, 8, 3, 10, 16, 58, 569456), completed_at=datetime.datetime(2025, 8, 3, 10, 17, 0, 570698), status=<BatchJobStatus.COMPLETED: 'completed'>, result=PipelineResult(pipeline_id='1754230618.569462', start_time=datetime.datetime(2025, 8, 3, 10, 16, 58, 569475), end_time=datetime.datetime(2025, 8, 3, 10, 17, 0, 570689), status='success', step_results={'slow': StepResult(step_name='slow', status=<StepStatus.COMPLETED: 'completed'>, start_time=datetime.datetime(2025, 8, 3, 10, 16, 58, 569494), end_time=datetime.datetime(2025, 8, 3, 10, 17, 0, 570619), output={'result': 'should not complete'}, error=None, metrics={})}, final_output={'result': 'should not complete'}, error_summary=[], metrics={'total_duration_seconds': 2.001195, 'steps_executed': 1, 'steps_succeeded': 1, 'steps_failed': 0}), error=None, retries=0, max_retries=0, metadata={}).status
+______________ TestBatchProcessor.test_concurrent_job_processing _______________
+tests/unit/test_batch_processor.py:429: in test_concurrent_job_processing
+    assert total_time < 3.5  # Allow some overhead
+    ^^^^^^^^^^^^^^^^^^^^^^^
+E   assert 4.001715898513794 < 3.5
+_________________ TestBMNIndexEstimator.test_basic_estimation __________________
+tests/unit/test_index_estimator.py:27: in test_basic_estimation
+    assert len(results.index_values) > 0
+E   AssertionError: assert 0 > 0
+E    +  where 0 = len(Empty DataFrame\nColumns: []\nIndex: [])
+E    +    where Empty DataFrame\nColumns: []\nIndex: [] = IndexResults(index_values=Empty DataFrame\nColumns: []\nIndex: [], regression_results={}, supertracts_used={2011: {}, 2012: {}, 2013: {}, 2014: {}, 2015: {}, 2016: {}, 2017: {}}, weights_applied={'10000_2011': WeightSet(geography_id='10000', period=2011, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '01001000003': 0.2, '01001000004': 0.2, '01001000005': 0.2}), '10000_2012': WeightSet(geography_id='10000', period=2012, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '01001000003': 0.2, '01001000004': 0.2, '01001000005': 0.2}), '10000_2013': WeightSet(geography_id='10000', period=2013, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '01001000003': 0.2, '01001000004': 0.2, '01001000005': 0.2}), '10000_2014': WeightSet(geography_id='10000', period=2014, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '01001000003': 0.2, '01001000004': 0.2, '01001000005': 0.2}), '10000_2015': WeightSet(geography_id='10000', period=2015, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '....2}), '10060_2013': WeightSet(geography_id='10060', period=2013, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2}), '10060_2014': WeightSet(geography_id='10060', period=2014, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2}), '10060_2015': WeightSet(geography_id='10060', period=2015, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2}), '10060_2016': WeightSet(geography_id='10060', period=2016, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2}), '10060_2017': WeightSet(geography_id='10060', period=2017, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2})}, coverage_stats={'total_pairs': 100, 'covered_pairs': 0, 'coverage_rate': 0.0, 'num_regressions': 0, 'geography_level': 'cbsa'}).index_values
+---------------------------- Captured stdout setup -----------------------------
+Generating geographic data for 20 tracts...
+Creating tract geometries...
+Creating CBSA metadata...
+Computing tract adjacencies...
+Generated 20 tracts in 4 CBSAs
+______________ TestBMNIndexEstimator.test_index_values_structure _______________
+tests/unit/test_index_estimator.py:44: in test_index_values_structure
+    assert 'date' in index_df.columns
+E   AssertionError: assert 'date' in RangeIndex(start=0, stop=0, step=1)
+E    +  where RangeIndex(start=0, stop=0, step=1) = Empty DataFrame\nColumns: []\nIndex: [].columns
+---------------------------- Captured stdout setup -----------------------------
+Generating geographic data for 20 tracts...
+Creating tract geometries...
+Creating CBSA metadata...
+Computing tract adjacencies...
+Generated 20 tracts in 4 CBSAs
+_______________ TestBMNIndexEstimator.test_date_range_filtering ________________
+tests/unit/test_index_estimator.py:95: in test_date_range_filtering
+    index_dates = pd.to_datetime(results.index_values['date'])
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/pandas/core/frame.py:4107: in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/pandas/core/indexes/range.py:417: in get_loc
+    raise KeyError(key)
+E   KeyError: 'date'
+---------------------------- Captured stdout setup -----------------------------
+Generating geographic data for 20 tracts...
+Creating tract geometries...
+Creating CBSA metadata...
+Computing tract adjacencies...
+Generated 20 tracts in 4 CBSAs
+_________________ TestBMNIndexEstimator.test_weight_generation _________________
+tests/unit/test_index_estimator.py:115: in test_weight_generation
+    assert len(results.weights_applied) > 0
+E   AssertionError: assert 0 > 0
+E    +  where 0 = len({})
+E    +    where {} = IndexResults(index_values=Empty DataFrame\nColumns: []\nIndex: [], regression_results={}, supertracts_used={2011: {}, 2012: {}, 2013: {}, 2014: {}, 2015: {}, 2016: {}, 2017: {}}, weights_applied={}, coverage_stats={'total_pairs': 100, 'covered_pairs': 0, 'coverage_rate': 0.0, 'num_regressions': 0, 'geography_level': 'cbsa'}).weights_applied
+---------------------------- Captured stdout setup -----------------------------
+Generating geographic data for 20 tracts...
+Creating tract geometries...
+Creating CBSA metadata...
+Computing tract adjacencies...
+Generated 20 tracts in 4 CBSAs
+_______________ TestBMNIndexEstimator.test_national_aggregation ________________
+tests/unit/test_index_estimator.py:133: in test_national_aggregation
+    assert all(index_df['geography_type'] == 'national')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/pandas/core/frame.py:4107: in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/pandas/core/indexes/range.py:417: in get_loc
+    raise KeyError(key)
+E   KeyError: 'geography_type'
+---------------------------- Captured stdout setup -----------------------------
+Generating geographic data for 20 tracts...
+Creating tract geometries...
+Creating CBSA metadata...
+Computing tract adjacencies...
+Generated 20 tracts in 4 CBSAs
+____________ TestBMNIndexEstimator.test_regression_results_storage _____________
+tests/unit/test_index_estimator.py:168: in test_regression_results_storage
+    assert len(results.regression_results) > 0
+E   AssertionError: assert 0 > 0
+E    +  where 0 = len({})
+E    +    where {} = IndexResults(index_values=Empty DataFrame\nColumns: []\nIndex: [], regression_results={}, supertracts_used={2011: {}, 2012: {}, 2013: {}, 2014: {}, 2015: {}, 2016: {}, 2017: {}}, weights_applied={'10000_2011': WeightSet(geography_id='10000', period=2011, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '01001000003': 0.2, '01001000004': 0.2, '01001000005': 0.2}), '10000_2012': WeightSet(geography_id='10000', period=2012, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '01001000003': 0.2, '01001000004': 0.2, '01001000005': 0.2}), '10000_2013': WeightSet(geography_id='10000', period=2013, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '01001000003': 0.2, '01001000004': 0.2, '01001000005': 0.2}), '10000_2014': WeightSet(geography_id='10000', period=2014, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '01001000003': 0.2, '01001000004': 0.2, '01001000005': 0.2}), '10000_2015': WeightSet(geography_id='10000', period=2015, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'01001000001': 0.2, '01001000002': 0.2, '....2}), '10060_2013': WeightSet(geography_id='10060', period=2013, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2}), '10060_2014': WeightSet(geography_id='10060', period=2014, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2}), '10060_2015': WeightSet(geography_id='10060', period=2015, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2}), '10060_2016': WeightSet(geography_id='10060', period=2016, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2}), '10060_2017': WeightSet(geography_id='10060', period=2017, weight_type=<WeightType.SAMPLE: 'sample'>, weights={'04004000001': 0.2, '04004000002': 0.2, '04004000003': 0.2, '04004000004': 0.2, '04004000005': 0.2})}, coverage_stats={'total_pairs': 100, 'covered_pairs': 0, 'coverage_rate': 0.0, 'num_regressions': 0, 'geography_level': 'cbsa'}).regression_results
+---------------------------- Captured stdout setup -----------------------------
+Generating geographic data for 20 tracts...
+Creating tract geometries...
+Creating CBSA metadata...
+Computing tract adjacencies...
+Generated 20 tracts in 4 CBSAs
+________________ TestBMNIndexEstimator.test_supertract_tracking ________________
+tests/unit/test_index_estimator.py:189: in test_supertract_tracking
+    assert len(supertracts) > 0
+E   assert 0 > 0
+E    +  where 0 = len({})
+---------------------------- Captured stdout setup -----------------------------
+Generating geographic data for 20 tracts...
+Creating tract geometries...
+Creating CBSA metadata...
+Computing tract adjacencies...
+Generated 20 tracts in 4 CBSAs
+______________ TestSupertractConstructor.test_basic_construction _______________
+tests/unit/test_supertract.py:30: in test_basic_construction
+    assert len(supertracts) > 0
+E   assert 0 > 0
+E    +  where 0 = len({})
+---------------------------- Captured stdout setup -----------------------------
+Generating geographic data for 20 tracts...
+Creating tract geometries...
+Creating CBSA metadata...
+Computing tract adjacencies...
+Generated 20 tracts in 4 CBSAs
+=============================== warnings summary ===============================
+tests/unit/test_regression.py::TestRepeatSalesRegression::test_date_filtering
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_parallel_execution
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_parallel_execution
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_scenario_execution
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_recommendations_generation
+tests/unit/test_sensitivity_analysis.py::TestSensitivityAnalyzer::test_recommendations_generation
+  /Users/duc/projects/claude/github/hpi-fhfa2/impl-pandas/src/hpi_fhfa/algorithms/regression.py:258: RuntimeWarning: invalid value encountered in sqrt
+    standard_errors = np.sqrt(variances)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+30.00s call     tests/unit/test_monitoring.py::TestPipelineMonitor::test_monitor_lifecycle
+30.00s call     tests/unit/test_monitoring.py::TestPipelineMonitor::test_health_checks
+10.01s call     tests/unit/test_batch_processor.py::TestBatchProcessor::test_job_retry_on_failure
+10.01s call     tests/unit/test_batch_processor.py::TestBatchProcessor::test_submit_and_process_job
+10.01s call     tests/unit/test_batch_processor.py::TestBatchProcessor::test_submit_batch_jobs
+10.00s call     tests/unit/test_batch_processor.py::TestBatchProcessor::test_get_job_result
+4.01s call     tests/unit/test_batch_processor.py::TestBatchProcessor::test_concurrent_job_processing
+3.01s call     tests/unit/test_batch_processor.py::TestBatchProcessor::test_job_timeout
+0.35s call     tests/unit/test_robust_regression.py::TestRobustRegression::test_different_robust_methods
+0.21s call     tests/unit/test_cache.py::TestDiskCacheBackend::test_disk_cache_ttl
+=========================== short test summary info ============================
+FAILED tests/unit/test_batch_processor.py::TestBatchProcessor::test_job_timeout
+FAILED tests/unit/test_batch_processor.py::TestBatchProcessor::test_concurrent_job_processing
+FAILED tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_basic_estimation
+FAILED tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_index_values_structure
+FAILED tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_date_range_filtering
+FAILED tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_weight_generation
+FAILED tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_national_aggregation
+FAILED tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_regression_results_storage
+FAILED tests/unit/test_index_estimator.py::TestBMNIndexEstimator::test_supertract_tracking
+FAILED tests/unit/test_supertract.py::TestSupertractConstructor::test_basic_construction
+============ 10 failed, 218 passed, 6 warnings in 110.40s (0:01:50) ============

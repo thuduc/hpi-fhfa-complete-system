@@ -1,0 +1,106 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.4, pytest-8.4.1, pluggy-1.6.0 -- /Users/duc/projects/claude/github/hpi-fhfa2/impl-pandas/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/duc/projects/claude/github/hpi-fhfa2/impl-pandas
+plugins: anyio-4.9.0, cov-6.2.1, mock-3.14.1
+collecting ... collected 243 items
+
+tests/integration/test_phase3_integration.py::TestPhase3Integration::test_full_index_calculation_pipeline FAILED [  0%]
+tests/integration/test_phase3_integration.py::TestPhase3Integration::test_supertract_construction_integration PASSED [  0%]
+tests/integration/test_phase3_integration.py::TestPhase3Integration::test_regression_with_real_patterns FAILED [  1%]
+tests/integration/test_phase3_integration.py::TestPhase3Integration::test_multi_geography_aggregation FAILED [  1%]
+tests/integration/test_phase6_integration.py::TestPhase6Integration::test_api_health_check ERROR [  2%]
+tests/integration/test_phase6_integration.py::TestPhase6Integration::test_api_index_calculation ERROR [  2%]
+
+==================================== ERRORS ====================================
+________ ERROR at setup of TestPhase6Integration.test_api_health_check _________
+tests/integration/test_phase6_integration.py:39: in test_data_path
+    transaction_data = syn_gen.generate_complete_dataset(
+src/hpi_fhfa/data/synthetic_generator.py:338: in generate_complete_dataset
+    transactions_df = self.generate_transactions(
+src/hpi_fhfa/data/synthetic_generator.py:180: in generate_transactions
+    first_year = np.random.randint(start_year, min(start_year + 10, end_year - 2))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy/random/mtrand.pyx:796: in numpy.random.mtrand.RandomState.randint
+    ???
+numpy/random/_bounded_integers.pyx:1334: in numpy.random._bounded_integers._rand_int64
+    ???
+E   ValueError: low >= high
+---------------------------- Captured stdout setup -----------------------------
+Generating synthetic data from 2019 to 2020...
+Generating property base data...
+Generating market indices...
+Generating transactions...
+______ ERROR at setup of TestPhase6Integration.test_api_index_calculation ______
+tests/integration/test_phase6_integration.py:39: in test_data_path
+    transaction_data = syn_gen.generate_complete_dataset(
+src/hpi_fhfa/data/synthetic_generator.py:338: in generate_complete_dataset
+    transactions_df = self.generate_transactions(
+src/hpi_fhfa/data/synthetic_generator.py:180: in generate_transactions
+    first_year = np.random.randint(start_year, min(start_year + 10, end_year - 2))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy/random/mtrand.pyx:796: in numpy.random.mtrand.RandomState.randint
+    ???
+numpy/random/_bounded_integers.pyx:1334: in numpy.random._bounded_integers._rand_int64
+    ???
+E   ValueError: low >= high
+---------------------------- Captured stdout setup -----------------------------
+Generating synthetic data from 2019 to 2020...
+Generating property base data...
+Generating market indices...
+Generating transactions...
+=================================== FAILURES ===================================
+__________ TestPhase3Integration.test_full_index_calculation_pipeline __________
+tests/integration/test_phase3_integration.py:28: in test_full_index_calculation_pipeline
+    transaction_data = syn_gen.generate_complete_dataset(
+src/hpi_fhfa/data/synthetic_generator.py:338: in generate_complete_dataset
+    transactions_df = self.generate_transactions(
+src/hpi_fhfa/data/synthetic_generator.py:180: in generate_transactions
+    first_year = np.random.randint(start_year, min(start_year + 10, end_year - 2))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy/random/mtrand.pyx:796: in numpy.random.mtrand.RandomState.randint
+    ???
+numpy/random/_bounded_integers.pyx:1334: in numpy.random._bounded_integers._rand_int64
+    ???
+E   ValueError: low >= high
+----------------------------- Captured stdout call -----------------------------
+Generating synthetic data from 2018 to 2020...
+Generating property base data...
+Generating market indices...
+Generating transactions...
+___________ TestPhase3Integration.test_regression_with_real_patterns ___________
+tests/integration/test_phase3_integration.py:213: in test_regression_with_real_patterns
+    assert abs(avg_return - monthly_appreciation) < 0.002  # Within 0.2%
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   assert np.float64(0.0024394560220721362) < 0.002
+E    +  where np.float64(0.0024394560220721362) = abs((np.float64(0.007439456022072136) - 0.005))
+____________ TestPhase3Integration.test_multi_geography_aggregation ____________
+tests/integration/test_phase3_integration.py:224: in test_multi_geography_aggregation
+    transaction_data = syn_gen.generate_complete_dataset(
+src/hpi_fhfa/data/synthetic_generator.py:338: in generate_complete_dataset
+    transactions_df = self.generate_transactions(
+src/hpi_fhfa/data/synthetic_generator.py:180: in generate_transactions
+    first_year = np.random.randint(start_year, min(start_year + 10, end_year - 2))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy/random/mtrand.pyx:796: in numpy.random.mtrand.RandomState.randint
+    ???
+numpy/random/_bounded_integers.pyx:1334: in numpy.random._bounded_integers._rand_int64
+    ???
+E   ValueError: low >= high
+----------------------------- Captured stdout call -----------------------------
+Generating synthetic data from 2019 to 2020...
+Generating property base data...
+Generating market indices...
+Generating transactions...
+============================= slowest 10 durations =============================
+0.01s call     tests/integration/test_phase3_integration.py::TestPhase3Integration::test_regression_with_real_patterns
+
+(9 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ============================
+FAILED tests/integration/test_phase3_integration.py::TestPhase3Integration::test_full_index_calculation_pipeline
+FAILED tests/integration/test_phase3_integration.py::TestPhase3Integration::test_regression_with_real_patterns
+FAILED tests/integration/test_phase3_integration.py::TestPhase3Integration::test_multi_geography_aggregation
+ERROR tests/integration/test_phase6_integration.py::TestPhase6Integration::test_api_health_check
+ERROR tests/integration/test_phase6_integration.py::TestPhase6Integration::test_api_index_calculation
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 5 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+==================== 3 failed, 1 passed, 2 errors in 0.61s =====================

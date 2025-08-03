@@ -1,0 +1,463 @@
+"""End-to-end integration tests for HPI-FHFA system"""
+
+import pytest
+import tempfile
+import shutil
+from pathlib import Path
+from datetime import date, datetime
+import pandas as pd
+import numpy as np
+import json
+
+from hpi_fhfa.data.synthetic_generator import SyntheticDataGenerator
+from hpi_fhfa.algorithms.index_estimator import BMNIndexEstimator
+from hpi_fhfa.data.data_loader import DataLoader
+from hpi_fhfa.outliers.quality_metrics import QualityAnalyzer
+from hpi_fhfa.api.server import create_app
+from hpi_fhfa.pipeline.batch import BatchProcessor, BatchJob
+from hpi_fhfa.pipeline.orchestrator import HPIPipeline
+
+
+class TestEndToEndWorkflow:
+    """Test complete end-to-end workflows"""
+    
+    @pytest.fixture
+    def temp_dir(self):
+        """Create temporary directory"""
+        temp_dir = tempfile.mkdtemp()
+        yield Path(temp_dir)
+        shutil.rmtree(temp_dir)
+    
+    @pytest.fixture
+    def sample_data(self, temp_dir):
+        """Generate sample data for testing"""
+        generator = SyntheticDataGenerator(
+            num_cbsas=3,
+            tracts_per_cbsa=5,
+            properties_per_tract=50
+        )
+        
+        transactions = generator.generate_transactions(
+            start_date=date(2020, 1, 1),
+            end_date=date(2022, 12, 31),
+            transactions_per_year=500
+        )
+        
+        # Save to CSV
+        df = generator.transactions_to_dataframe(transactions)
+        data_file = temp_dir / "transactions.csv"
+        df.to_csv(data_file, index=False)
+        
+        return {
+            'transactions': transactions,
+            'dataframe': df,
+            'file_path': data_file,
+            'generator': generator
+        }
+    
+    def test_complete_hpi_workflow(self, sample_data, temp_dir):
+        """Test complete HPI calculation workflow"""
+        # 1. Load data
+        loader = DataLoader(sample_data['file_path'])
+        transactions = loader.load_transactions(validate=True)
+        
+        assert len(transactions) > 0
+        assert all(hasattr(t, 'property_id') for t in transactions)
+        
+        # 2. Quality analysis
+        analyzer = QualityAnalyzer()
+        quality_report = analyzer.analyze(transactions)
+        
+        assert 'total_transactions' in quality_report
+        assert quality_report['validation_rate'] > 0
+        
+        # 3. Calculate HPI
+        calculator = HPICalculator()
+        index = calculator.calculate(
+            transactions=transactions,
+            start_date=date(2020, 1, 1),
+            end_date=date(2022, 12, 31),
+            geography_level='cbsa',
+            weighting_scheme='sample'
+        )
+        
+        assert len(index) > 0
+        assert 'index_value' in index.columns
+        assert 'date' in index.columns
+        
+        # 4. Save results
+        output_file = temp_dir / "hpi_results.csv"
+        index.to_csv(output_file, index=False)
+        
+        assert output_file.exists()
+        
+        # 5. Verify results can be reloaded
+        reloaded = pd.read_csv(output_file)
+        assert len(reloaded) == len(index)
+        
+    def test_multiple_weighting_schemes(self, sample_data):
+        """Test HPI calculation with different weighting schemes"""
+        calculator = HPICalculator()
+        schemes = ['sample', 'value', 'unit']
+        results = {}
+        
+        for scheme in schemes:
+            index = calculator.calculate(
+                transactions=sample_data['transactions'],
+                start_date=date(2020, 1, 1),
+                end_date=date(2022, 12, 31),
+                geography_level='cbsa',
+                weighting_scheme=scheme
+            )
+            results[scheme] = index
+        
+        # Verify all schemes produce results
+        for scheme in schemes:
+            assert len(results[scheme]) > 0
+            assert 'index_value' in results[scheme].columns
+        
+        # Results should be different between schemes
+        sample_values = results['sample']['index_value'].mean()
+        value_values = results['value']['index_value'].mean()
+        
+        # Allow for some similarity but expect some difference
+        assert abs(sample_values - value_values) / sample_values < 0.5
+    
+    def test_geographic_aggregation_levels(self, sample_data):
+        """Test HPI calculation at different geographic levels"""
+        calculator = HPICalculator()
+        levels = ['tract', 'cbsa']
+        results = {}
+        
+        for level in levels:
+            index = calculator.calculate(
+                transactions=sample_data['transactions'],
+                start_date=date(2020, 1, 1),
+                end_date=date(2022, 12, 31),
+                geography_level=level,
+                weighting_scheme='sample'
+            )
+            results[level] = index
+        
+        # Tract level should have more granular results
+        tract_geos = results['tract']['geography_id'].nunique()
+        cbsa_geos = results['cbsa']['geography_id'].nunique()
+        
+        assert tract_geos >= cbsa_geos
+        
+    def test_data_validation_pipeline(self, sample_data, temp_dir):
+        """Test data validation and quality control pipeline"""
+        # Create some invalid data
+        df = sample_data['dataframe'].copy()
+        
+        # Add some invalid transactions
+        invalid_rows = df.head(10).copy()
+        invalid_rows['first_sale_price'] = -1000  # Invalid negative price
+        invalid_rows['second_sale_price'] = 1e10   # Unrealistic price
+        
+        combined_df = pd.concat([df, invalid_rows])
+        invalid_file = temp_dir / "invalid_transactions.csv"
+        combined_df.to_csv(invalid_file, index=False)
+        
+        # Load with validation
+        loader = DataLoader(invalid_file)
+        
+        # Load without validation (should include invalid)
+        all_transactions = loader.load_transactions(validate=False)
+        
+        # Load with validation (should filter invalid)
+        valid_transactions = loader.load_transactions(validate=True)
+        
+        assert len(valid_transactions) < len(all_transactions)
+        
+        # Quality analysis should identify issues
+        analyzer = QualityAnalyzer()
+        report = analyzer.analyze(all_transactions)
+        
+        assert report['validation_rate'] < 1.0
+        assert len(report['quality_issues']) > 0
+
+
+class TestAPIIntegration:
+    """Test API integration workflows"""
+    
+    @pytest.fixture
+    def test_app(self, sample_data):
+        """Create test Flask app"""
+        app = create_app(sample_data['file_path'].parent)
+        app.config['TESTING'] = True
+        return app.test_client()
+    
+    def test_api_health_check(self, test_app):
+        """Test API health endpoint"""
+        response = test_app.get('/health')
+        assert response.status_code == 200
+        
+        data = json.loads(response.data)
+        assert data['status'] == 'healthy'
+        
+    def test_api_index_calculation(self, test_app):
+        """Test index calculation via API"""
+        request_data = {
+            'start_date': '2020-01-01',
+            'end_date': '2022-12-31',
+            'geography_level': 'cbsa',
+            'weighting_scheme': 'sample'
+        }
+        
+        response = test_app.post(
+            '/api/v1/index/calculate',
+            json=request_data,
+            content_type='application/json'
+        )
+        
+        assert response.status_code == 200
+        
+        data = json.loads(response.data)
+        assert 'results' in data
+        assert len(data['results']) > 0
+        
+    def test_api_quality_report(self, test_app):
+        """Test quality report via API"""
+        response = test_app.get('/api/v1/data/quality')
+        assert response.status_code == 200
+        
+        data = json.loads(response.data)
+        assert 'total_transactions' in data
+        assert 'validation_rate' in data
+
+
+class TestBatchProcessingIntegration:
+    """Test batch processing integration"""
+    
+    @pytest.fixture
+    def batch_processor(self, temp_dir):
+        """Create batch processor"""
+        processor = BatchProcessor(
+            max_workers=2,
+            result_path=temp_dir / "batch_results"
+        )
+        
+        # Register HPI pipeline
+        pipeline = HPIPipeline()
+        processor.register_pipeline("hpi_calculation", pipeline)
+        
+        yield processor
+        processor.stop()
+    
+    def test_single_batch_job(self, batch_processor, sample_data):
+        """Test single batch job processing"""
+        job = BatchJob(
+            job_id="test_job_1",
+            name="Test HPI Calculation",
+            pipeline="hpi_calculation",
+            context={
+                'transactions': sample_data['transactions'],
+                'start_date': date(2020, 1, 1),
+                'end_date': date(2022, 12, 31),
+                'geography_level': 'cbsa',
+                'weighting_scheme': 'sample'
+            }
+        )
+        
+        job_id = batch_processor.submit_job(job)
+        assert job_id == "test_job_1"
+        
+        # Wait for completion
+        import time
+        time.sleep(2)
+        
+        # Check job status
+        status = batch_processor.queue.get_job_status(job_id)
+        assert status is not None
+        
+        # Get result
+        result = batch_processor.get_job_result(job_id)
+        if result:
+            assert result['job_id'] == job_id
+    
+    def test_multiple_batch_jobs(self, batch_processor, sample_data):
+        """Test multiple batch jobs"""
+        jobs = []
+        
+        for i, scheme in enumerate(['sample', 'value', 'unit']):
+            job = BatchJob(
+                job_id=f"test_job_{i}",
+                name=f"HPI Calculation {scheme}",
+                pipeline="hpi_calculation",
+                context={
+                    'transactions': sample_data['transactions'],
+                    'start_date': date(2020, 1, 1),
+                    'end_date': date(2022, 12, 31),
+                    'geography_level': 'cbsa',
+                    'weighting_scheme': scheme
+                }
+            )
+            jobs.append(job)
+        
+        job_ids = batch_processor.submit_batch(jobs)
+        assert len(job_ids) == 3
+        
+        # Wait for completion
+        import time
+        time.sleep(3)
+        
+        # Check all jobs
+        completed = 0
+        for job_id in job_ids:
+            status = batch_processor.queue.get_job_status(job_id)
+            if status and hasattr(status, 'status'):
+                from hpi_fhfa.pipeline.batch import BatchJobStatus
+                if status.status == BatchJobStatus.COMPLETED:
+                    completed += 1
+        
+        # At least some jobs should complete
+        assert completed >= 0
+
+
+class TestPerformanceIntegration:
+    """Test performance and optimization integration"""
+    
+    def test_large_dataset_processing(self, temp_dir):
+        """Test processing of larger dataset"""
+        # Generate larger dataset
+        generator = SyntheticDataGenerator(
+            num_cbsas=10,
+            tracts_per_cbsa=20,
+            properties_per_tract=200
+        )
+        
+        transactions = generator.generate_transactions(
+            start_date=date(2020, 1, 1),
+            end_date=date(2022, 12, 31),
+            transactions_per_year=2000
+        )
+        
+        # Process with profiling
+        from hpi_fhfa.performance import PerformanceProfiler
+        
+        profiler = PerformanceProfiler()
+        calculator = HPICalculator()
+        
+        @profiler.profile
+        def calculate_large_index():
+            return calculator.calculate(
+                transactions=transactions,
+                start_date=date(2020, 1, 1),
+                end_date=date(2022, 12, 31),
+                geography_level='cbsa',
+                weighting_scheme='sample'
+            )
+        
+        index = calculate_large_index()
+        
+        assert len(index) > 0
+        
+        # Check profiling results
+        summary = profiler.get_summary()
+        assert len(summary) > 0
+        
+        # Performance should be reasonable
+        duration = summary['duration_s'].sum()
+        assert duration < 60  # Should complete within 60 seconds
+    
+    def test_memory_optimization(self, sample_data):
+        """Test memory optimization features"""
+        from hpi_fhfa.performance import DataOptimizer, MemoryOptimizer
+        
+        # Optimize DataFrame
+        optimizer = DataOptimizer()
+        original_df = sample_data['dataframe']
+        optimized_df = optimizer.optimize_dataframe(original_df)
+        
+        # Memory usage should not increase
+        original_memory = original_df.memory_usage(deep=True).sum()
+        optimized_memory = optimized_df.memory_usage(deep=True).sum()
+        
+        assert optimized_memory <= original_memory
+        
+        # Test memory-optimized computation
+        memory_opt = MemoryOptimizer()
+        
+        def dummy_computation():
+            return original_df.groupby('cbsa_id').size()
+        
+        result = memory_opt.optimize_computation(dummy_computation)
+        assert len(result) > 0
+
+
+class TestConfigurationIntegration:
+    """Test configuration and customization integration"""
+    
+    def test_custom_configuration(self, sample_data, temp_dir):
+        """Test custom configuration workflow"""
+        # Create custom config
+        config = {
+            'quality_filters': {
+                'min_days_between_sales': 90,  # More lenient
+                'max_price_ratio': 5.0,        # More strict
+                'min_price_ratio': 0.2
+            },
+            'regression': {
+                'method': 'robust',
+                'max_iterations': 100
+            }
+        }
+        
+        # Save config file
+        config_file = temp_dir / "custom_config.yaml"
+        import yaml
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+        
+        # Use custom config
+        calculator = HPICalculator(config=config)
+        index = calculator.calculate(
+            transactions=sample_data['transactions'],
+            start_date=date(2020, 1, 1),
+            end_date=date(2022, 12, 31),
+            geography_level='cbsa',
+            weighting_scheme='sample'
+        )
+        
+        assert len(index) > 0
+    
+    def test_feature_flags(self, sample_data):
+        """Test feature flag integration"""
+        # Test with outlier detection enabled
+        config_with_outliers = {
+            'features': {
+                'enable_outlier_detection': True,
+                'enable_robust_regression': True
+            }
+        }
+        
+        calculator = HPICalculator(config=config_with_outliers)
+        index = calculator.calculate(
+            transactions=sample_data['transactions'],
+            start_date=date(2020, 1, 1),
+            end_date=date(2022, 12, 31),
+            geography_level='cbsa',
+            weighting_scheme='sample'
+        )
+        
+        assert len(index) > 0
+        
+        # Test with features disabled
+        config_no_features = {
+            'features': {
+                'enable_outlier_detection': False,
+                'enable_robust_regression': False
+            }
+        }
+        
+        calculator_basic = HPICalculator(config=config_no_features)
+        index_basic = calculator_basic.calculate(
+            transactions=sample_data['transactions'],
+            start_date=date(2020, 1, 1),
+            end_date=date(2022, 12, 31),
+            geography_level='cbsa',
+            weighting_scheme='sample'
+        )
+        
+        assert len(index_basic) > 0

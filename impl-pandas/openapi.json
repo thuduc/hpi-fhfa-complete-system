@@ -1,0 +1,841 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "HPI-FHFA House Price Index API",
+    "description": "REST API for calculating and analyzing house price indices using the FHFA methodology",
+    "version": "1.0.0",
+    "contact": {
+      "name": "HPI-FHFA Development Team",
+      "email": "api-support@hpi-fhfa.example.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api.hpi-fhfa.example.com",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Check the health status of the API service",
+        "operationId": "healthCheck",
+        "tags": ["System"],
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["healthy"],
+                      "description": "Health status"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Current server timestamp"
+                    }
+                  },
+                  "required": ["status", "timestamp"]
+                },
+                "example": {
+                  "status": "healthy",
+                  "timestamp": "2025-08-03T14:30:00Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/index/calculate": {
+      "post": {
+        "summary": "Calculate House Price Index",
+        "description": "Calculate house price index based on transaction data and specified parameters",
+        "operationId": "calculateIndex",
+        "tags": ["Index Calculation"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IndexRequest"
+              },
+              "example": {
+                "start_date": "2020-01-01",
+                "end_date": "2022-12-31",
+                "geography_level": "cbsa",
+                "weighting_scheme": "sample",
+                "include_quality_metrics": true,
+                "include_outlier_analysis": true,
+                "robust_regression": false,
+                "output_format": "json",
+                "filters": {
+                  "cbsa_id": ["12420", "12580"]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Index calculation successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndexResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/data/upload": {
+      "post": {
+        "summary": "Upload Data",
+        "description": "Upload transaction or reference data files to the system",
+        "operationId": "uploadData",
+        "tags": ["Data Management"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Data file to upload"
+                  },
+                  "data_type": {
+                    "type": "string",
+                    "enum": ["transactions", "geography", "demographics"],
+                    "description": "Type of data being uploaded"
+                  },
+                  "file_format": {
+                    "type": "string",
+                    "enum": ["csv", "json", "parquet"],
+                    "description": "Format of the uploaded file"
+                  },
+                  "validate_data": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to validate data during upload"
+                  },
+                  "replace_existing": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether to replace existing data"
+                  },
+                  "metadata": {
+                    "type": "string",
+                    "description": "Additional metadata as JSON string"
+                  }
+                },
+                "required": ["file", "data_type", "file_format"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Data uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataUploadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid file or parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/data/quality": {
+      "get": {
+        "summary": "Get Data Quality Report",
+        "description": "Generate a comprehensive data quality report for the loaded transaction data",
+        "operationId": "getQualityReport",
+        "tags": ["Data Management"],
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date for quality analysis (ISO format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date for quality analysis (ISO format)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quality report generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QualityReportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analysis/sensitivity": {
+      "post": {
+        "summary": "Run Sensitivity Analysis",
+        "description": "Perform sensitivity analysis by varying parameters and measuring impact on index results",
+        "operationId": "runSensitivityAnalysis",
+        "tags": ["Analysis"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SensitivityAnalysisRequest"
+              },
+              "example": {
+                "base_request": {
+                  "start_date": "2020-01-01",
+                  "end_date": "2022-12-31",
+                  "geography_level": "cbsa",
+                  "weighting_scheme": "sample"
+                },
+                "parameters_to_vary": ["min_pairs", "outlier_threshold"],
+                "parameter_ranges": {
+                  "min_pairs": [20, 30, 40, 50],
+                  "outlier_threshold": [0.01, 0.05, 0.1]
+                },
+                "include_visualizations": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sensitivity analysis completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SensitivityAnalysisResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid analysis parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/docs": {
+      "get": {
+        "summary": "Get API Documentation",
+        "description": "Get simplified API documentation in JSON format",
+        "operationId": "getApiDocs",
+        "tags": ["System"],
+        "responses": {
+          "200": {
+            "description": "API documentation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "string",
+                      "description": "API version"
+                    },
+                    "endpoints": {
+                      "type": "object",
+                      "description": "Available endpoints and their descriptions"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "IndexRequest": {
+        "type": "object",
+        "required": ["start_date", "end_date"],
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Start date for index calculation"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "End date for index calculation"
+          },
+          "geography_level": {
+            "type": "string",
+            "enum": ["tract", "cbsa", "state", "national"],
+            "default": "cbsa",
+            "description": "Geographic aggregation level"
+          },
+          "weighting_scheme": {
+            "type": "string",
+            "enum": ["sample", "value", "stock", "demographic"],
+            "default": "sample",
+            "description": "Weighting scheme for index calculation"
+          },
+          "include_quality_metrics": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include quality metrics in response"
+          },
+          "include_outlier_analysis": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include outlier analysis in response"
+          },
+          "robust_regression": {
+            "type": "boolean",
+            "default": false,
+            "description": "Use robust regression methods"
+          },
+          "output_format": {
+            "type": "string",
+            "enum": ["json", "csv", "parquet"],
+            "default": "json",
+            "description": "Output format for results"
+          },
+          "filters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Optional filters for data selection"
+          }
+        }
+      },
+      "IndexResponse": {
+        "type": "object",
+        "required": ["request_id", "status"],
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "description": "Unique request identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["success", "error", "processing"],
+            "description": "Request status"
+          },
+          "index_values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "geography_id": {
+                  "type": "string"
+                },
+                "geography_name": {
+                  "type": "string"
+                },
+                "index_value": {
+                  "type": "number"
+                },
+                "standard_error": {
+                  "type": "number"
+                },
+                "transaction_count": {
+                  "type": "integer"
+                }
+              }
+            },
+            "description": "Calculated index values"
+          },
+          "quality_metrics": {
+            "type": "object",
+            "properties": {
+              "coverage_rate": {
+                "type": "number"
+              },
+              "validation_rate": {
+                "type": "number"
+              },
+              "outlier_rate": {
+                "type": "number"
+              }
+            },
+            "description": "Data quality metrics"
+          },
+          "outlier_summary": {
+            "type": "object",
+            "properties": {
+              "total_outliers": {
+                "type": "integer"
+              },
+              "outlier_percentage": {
+                "type": "number"
+              },
+              "outlier_by_type": {
+                "type": "object"
+              }
+            },
+            "description": "Outlier analysis summary"
+          },
+          "coverage_stats": {
+            "type": "object",
+            "properties": {
+              "total_geographies": {
+                "type": "integer"
+              },
+              "covered_geographies": {
+                "type": "integer"
+              },
+              "coverage_percentage": {
+                "type": "number"
+              }
+            },
+            "description": "Geographic coverage statistics"
+          },
+          "computation_time_seconds": {
+            "type": "number",
+            "description": "Time taken for computation"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message if status is error"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Warning messages"
+          }
+        }
+      },
+      "DataUploadResponse": {
+        "type": "object",
+        "required": ["upload_id", "status"],
+        "properties": {
+          "upload_id": {
+            "type": "string",
+            "description": "Unique upload identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["success", "error", "validation_failed"],
+            "description": "Upload status"
+          },
+          "records_processed": {
+            "type": "integer",
+            "description": "Total records processed"
+          },
+          "records_valid": {
+            "type": "integer",
+            "description": "Number of valid records"
+          },
+          "records_invalid": {
+            "type": "integer",
+            "description": "Number of invalid records"
+          },
+          "validation_errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "row": {
+                  "type": "integer"
+                },
+                "field": {
+                  "type": "string"
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Validation error details"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message if upload failed"
+          }
+        }
+      },
+      "QualityReportResponse": {
+        "type": "object",
+        "required": ["report_id", "generated_at", "overall_quality_score"],
+        "properties": {
+          "report_id": {
+            "type": "string",
+            "description": "Unique report identifier"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Report generation timestamp"
+          },
+          "overall_quality_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Overall data quality score (0-1)"
+          },
+          "quality_scores": {
+            "type": "object",
+            "properties": {
+              "completeness": {
+                "type": "number"
+              },
+              "validity": {
+                "type": "number"
+              },
+              "consistency": {
+                "type": "number"
+              },
+              "timeliness": {
+                "type": "number"
+              }
+            },
+            "description": "Individual quality dimension scores"
+          },
+          "summary_metrics": {
+            "type": "object",
+            "properties": {
+              "total_transactions": {
+                "type": "integer"
+              },
+              "valid_transactions": {
+                "type": "integer"
+              },
+              "invalid_transactions": {
+                "type": "integer"
+              },
+              "unique_properties": {
+                "type": "integer"
+              },
+              "repeat_pairs": {
+                "type": "integer"
+              }
+            },
+            "description": "Summary data metrics"
+          },
+          "temporal_coverage": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "year": {
+                  "type": "integer"
+                },
+                "quarter": {
+                  "type": "integer"
+                },
+                "transaction_count": {
+                  "type": "integer"
+                }
+              }
+            },
+            "description": "Temporal data coverage"
+          },
+          "geographic_coverage": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "geography_id": {
+                  "type": "string"
+                },
+                "geography_name": {
+                  "type": "string"
+                },
+                "transaction_count": {
+                  "type": "integer"
+                }
+              }
+            },
+            "description": "Geographic data coverage"
+          },
+          "price_distribution": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "price_range": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer"
+                },
+                "percentage": {
+                  "type": "number"
+                }
+              }
+            },
+            "description": "Price distribution analysis"
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Data quality improvement recommendations"
+          },
+          "detailed_report_url": {
+            "type": "string",
+            "description": "URL to download detailed report"
+          }
+        }
+      },
+      "SensitivityAnalysisRequest": {
+        "type": "object",
+        "required": ["base_request", "parameters_to_vary", "parameter_ranges"],
+        "properties": {
+          "base_request": {
+            "$ref": "#/components/schemas/IndexRequest",
+            "description": "Base index calculation request"
+          },
+          "parameters_to_vary": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of parameters to vary"
+          },
+          "parameter_ranges": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {}
+            },
+            "description": "Value ranges for each parameter"
+          },
+          "include_visualizations": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include visualization URLs/data"
+          }
+        }
+      },
+      "SensitivityAnalysisResponse": {
+        "type": "object",
+        "required": ["analysis_id", "base_results", "sensitivity_results"],
+        "properties": {
+          "analysis_id": {
+            "type": "string",
+            "description": "Unique analysis identifier"
+          },
+          "base_results": {
+            "$ref": "#/components/schemas/IndexResponse",
+            "description": "Results from base parameter set"
+          },
+          "sensitivity_results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "parameter_values": {
+                  "type": "object"
+                },
+                "index_mean": {
+                  "type": "number"
+                },
+                "index_std": {
+                  "type": "number"
+                },
+                "computation_time": {
+                  "type": "number"
+                }
+              }
+            },
+            "description": "Results for each parameter combination"
+          },
+          "parameter_impacts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "Impact score for each parameter"
+          },
+          "visualizations": {
+            "type": "object",
+            "properties": {
+              "impact_chart": {
+                "type": "string"
+              },
+              "sensitivity_surface": {
+                "type": "string"
+              },
+              "parameter_correlation": {
+                "type": "string"
+              }
+            },
+            "description": "Visualization URLs or base64 data"
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Parameter tuning recommendations"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["status", "error_message"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["error"],
+            "description": "Error status"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Detailed error message"
+          },
+          "error_code": {
+            "type": "string",
+            "description": "Error code for programmatic handling"
+          },
+          "details": {
+            "type": "object",
+            "description": "Additional error details"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "System",
+      "description": "System health and documentation endpoints"
+    },
+    {
+      "name": "Index Calculation",
+      "description": "House price index calculation endpoints"
+    },
+    {
+      "name": "Data Management",
+      "description": "Data upload and quality management endpoints"
+    },
+    {
+      "name": "Analysis",
+      "description": "Advanced analysis endpoints"
+    }
+  ]
+}
