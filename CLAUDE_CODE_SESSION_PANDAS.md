@@ -1,3 +1,5 @@
+## All prompts issued to Claude Code (including summary outputs from Claude Code upon completion of each prompt)
+
 > Create a hpi_fhfa_prd.md file to represent the Product Requirements Document (PRD) using the whitepaper @hpi_fhfa_whitepaper.pdf. Use the whitepaper to extract the relevant equations, variables, and coefficients as functional requirements in the hpi_fhfa_prd.md PRD. Think hard
 
 ✻ Thinking…
