@@ -14,6 +14,7 @@ The purpose of this proof of concept is to find out if an LLM can take an econom
 ### Implementation Details
 * The pandas implementation resides under impl-pandas/ directory.
   * See [CLAUDE_CODE_SESSION_PANDAS.md](CLAUDE_CODE_SESSION_PANDAS.md) for all prompts issued to Claude Code. A summary response to each prompt by Claude Code is also included.
+  * See [impl-pandas/TEST_SUMMARY.md](impl-pandas/TEST_SUMMARY.md) for the test summary report.
   * See [impl-pandas/README.md](impl-pandas/README.md) details on the Pandas implementation.
   * Time took to implement all 7 phases: 3 hours
 
