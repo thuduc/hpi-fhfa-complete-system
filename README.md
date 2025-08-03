@@ -1,4 +1,4 @@
-## hpi-fhfa-complete-system - GenAI Proof of Concept: generate an end-to-end system implementation of FHFA's Repeat-Sales Aggregation Index model whitepaper
+## GenAI Proof of Concept: generate an end-to-end system implementation of FHFA's Repeat-Sales Aggregation Index model whitepaper
 
 The purpose of this proof of concept is to find out if an LLM can take an econometric model whitepaper and generate an end-to-end system implementation. The whitepaper used for this PoC is FHFA's Repeat-Sales Aggregation Index: https://www.fhfa.gov/document/wp2101.pdf (saved as [hpi_fhfa_whitepaper.pdf](hpi_fhfa_whitepaper.pdf))
 
