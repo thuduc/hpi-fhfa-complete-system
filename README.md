@@ -11,7 +11,12 @@ The purpose of this proof of concept is to find out if an LLM can take an econom
 * Step 2 - request Claude Code (using Opus 4 as the model) to generate a detailed system implementation plan by analyzing the PRD generated in Step 1. For our POC, we will request Claude Code to generate an implementation plans base on Python and Pandas, stored in [IMPLEMENTATION_PLAN_PANDAS.md](IMPLEMENTATION_PLAN_PANDAS.md)
 * Step 3 - request Claude Code (with Opus 4) to implement all phases of this plan. Each plan includes requirements for comprehensive test coverage (both unit and integration tests)
 
-### Implementation Details
+### How we verified the accuracy of the Product Requirements Document (PRD)
+We used Claude Opus 4 LLM to generate the PRD from the whitepaper. In order to verify the accuracy of the PRD, we used 2 additional LLMs:
+* ChatGPT o3 response: "A line-by-line comparison of the PRD with the mathematical definitions and data-handling rules in Contat & Larson (2022) shows that every equation, variable name, coefficient definition and threshold appearing in the PRD is consistent with the white-paper. No corrections are required."
+* Gemini 2.5 Pro response: "The Product Requirements Document (PRD) is correct in its representation of the equations, variables, and coefficients described in the FHFA whitepaper. My verification confirms that the mathematical and algorithmic specifications in the PRD accurately reflect the methodology detailed in the source document"
+
+### PoC Results
 * The pandas implementation resides under impl-pandas/ directory.
   * See [CLAUDE_CODE_SESSION_PANDAS.md](CLAUDE_CODE_SESSION_PANDAS.md) for all prompts issued to Claude Code. A summary response to each prompt by Claude Code is also included.
   * See [impl-pandas/TEST_SUMMARY.md](impl-pandas/TEST_SUMMARY.md) for the test summary report.
